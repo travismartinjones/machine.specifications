@@ -57,7 +57,7 @@ namespace Machine.Specifications.Model
                    IEnumerable<Tag> tags,
                    bool isSetupForEachSpec)
     {
-      Name = type.Name.ToFormat();
+      Name = GetParentName(type) + type.Name.ToFormat();
       Type = type;
       _instance = instance;
       _cleanupClauses = cleanupClauses;
@@ -122,6 +122,23 @@ namespace Machine.Specifications.Model
 
         return line + Name;
       }
+    }
+
+    static string GetParentName(Type type)
+    {
+        var parentName = "";
+        var parent = type.BaseType;
+
+        while (parent != null)
+        {
+            if (parent.Name.StartsWith("when") || parent.Name.StartsWith("and"))
+            {
+                parentName += parent.Name.ToFormat() + " ";
+            }
+
+            parent = parent.BaseType;
+        }
+        return parentName;
     }
 
     public bool HasExecutableSpecifications

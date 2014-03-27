@@ -240,4 +240,49 @@ namespace Machine.Specifications
     {
     }
   }
+
+  public class when_a_specification_has_a_child
+  {
+    public static bool BecauseInvoked = false;
+    public static bool ItInvoked = false;
+    public static bool ParentContextInvoked = false;
+    public static bool ChildContextInvoked = false;
+    public static bool CleanupInvoked = false;
+
+    Establish context = () =>
+    {
+        ParentContextInvoked = true;
+    };    
+
+    public class and_that_child_has_a_test : when_a_specification_has_a_child
+    {
+        Establish context = () =>
+        {
+            ChildContextInvoked = true;
+        };
+
+        Because of = () =>
+        {
+            BecauseInvoked = true;
+        };
+
+        It is_a_child_specification = () =>
+        {
+            ItInvoked = true;
+        };
+    }
+        
+    Cleanup after = () =>
+    {
+        CleanupInvoked = true;
+    };
+
+    public void Reset()
+    {
+        BecauseInvoked = false;
+        ItInvoked = false;
+        ParentContextInvoked = false;
+        CleanupInvoked = false;
+    }
+  }
 }

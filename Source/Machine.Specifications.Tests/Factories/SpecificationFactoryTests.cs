@@ -49,6 +49,22 @@ namespace Machine.Specifications.Factories
     }
   }
 
+  [TestFixture]
+  public class SpecificationFactory_NestedSpecifications : WithNestedSpecification
+  {
+    [Test]
+    public void ShouldHaveCorrectItClause()
+    {        
+        specification.Name.ShouldEqual("is a child specification");
+    }
+
+    [Test]
+    public void TheContextNameShouldBePrependedWithTheBaseClassName()
+    {
+        context.Name.ShouldEqual("when a specification has a child and that child has a test");
+    }
+  }
+
   public class WithUndefinedSpecification : TestsFor<SpecificationFactory>
   {
     protected Specification specification;
@@ -86,6 +102,21 @@ namespace Machine.Specifications.Factories
       FieldInfo field = type.GetInstanceFieldsOfUsage(DelegateUsage.Assert).First();
       ContextFactory factory = new ContextFactory();
       var context = factory.CreateContextFrom(new ContextWithThrowingSpecification());
+
+      specification = Target.CreateSpecification(context, field);
+    }
+  }
+
+  public class WithNestedSpecification : TestsFor<SpecificationFactory>
+  {
+    protected Context context;
+    protected Specification specification;
+    public override void BeforeEachTest()
+    {
+      Type type = typeof(when_a_specification_has_a_child.and_that_child_has_a_test);
+      FieldInfo field = type.GetInstanceFieldsOfUsage(DelegateUsage.Assert).First();
+      ContextFactory factory = new ContextFactory();
+      context = factory.CreateContextFrom(new when_a_specification_has_a_child.and_that_child_has_a_test());
 
       specification = Target.CreateSpecification(context, field);
     }
