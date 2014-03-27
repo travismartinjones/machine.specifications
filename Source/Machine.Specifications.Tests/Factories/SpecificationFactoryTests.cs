@@ -59,13 +59,13 @@ namespace Machine.Specifications.Factories
     [Test]
     public void ShouldHaveCorrectItClause()
     {        
-        specification.Name.ShouldEqual("is a child specification");
+        specification.Name.Should().Be("is a child specification");
     }
 
     [Test]
     public void TheContextNameShouldBePrependedWithTheBaseClassName()
     {
-        context.Name.ShouldEqual("when a specification has a child and that child has a test");
+        context.Name.Should().Be("when a specification has a child and that child has a test");
     }
   }
 
@@ -118,7 +118,7 @@ namespace Machine.Specifications.Factories
     public override void BeforeEachTest()
     {
       Type type = typeof(when_a_specification_has_a_child.and_that_child_has_a_test);
-      FieldInfo field = type.GetInstanceFieldsOfUsage(DelegateUsage.Assert).First();
+      FieldInfo field = type.GetInstanceFieldsOfUsage(new AssertDelegateAttributeFullName()).First();
       ContextFactory factory = new ContextFactory();
       context = factory.CreateContextFrom(new when_a_specification_has_a_child.and_that_child_has_a_test());
 
